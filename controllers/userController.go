@@ -23,3 +23,31 @@ func RegisterUserController(c echo.Context) error {
 		"user":    formatUser,
 	})
 }
+
+func LoginUserController(c echo.Context) error {
+	userLogin, err := database.LoginUser(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	userStruct := userLogin.(models.User)
+
+	formatUser := formatter.FormatUser(userStruct, "tokenjwt")
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Login Successfully",
+		"user":    formatUser,
+	})
+}
+
+func UploadAvatarController(c echo.Context) error {
+	user, err := database.Update(c)
+	if err != nil {
+		return err
+	}
+	
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message" : "Succes update user",
+		"user" : user,
+	})
+}

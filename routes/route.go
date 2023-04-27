@@ -14,6 +14,8 @@ func Routes() *echo.Echo {
 	e.Pre(mid.RemoveTrailingSlash())
 
 	e.POST("/users", controllers.RegisterUserController)
+	e.POST("/login", controllers.LoginUserController)
+	e.PUT("/upload/:id", controllers.UploadAvatarController)
 
 	return e
 }
