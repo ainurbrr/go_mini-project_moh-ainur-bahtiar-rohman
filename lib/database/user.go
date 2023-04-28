@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 	"penggalangan-dana/config"
+	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
-	"penggalangan-dana/utils"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -24,6 +24,7 @@ func isEmailAvailable(email string) bool {
 func RegisterUser(c echo.Context) (interface{}, error) {
 	user := models.User{}
 	c.Bind(&user)
+	user.Role = "user"
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -65,11 +66,18 @@ func FindById(id int) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if user.ID == 0 {
+		return nil, errors.New("user not found")
+	}
 	return user, nil
 }
 
 func Update(c echo.Context) (interface{}, error) {
-	id, _ := utils.GetIdFromParam(c)
+	id, err := middlewares.ExtractTokenId(c)
+	if err != nil {
+		return nil, err
+	}
 
 	user, err := FindById(id)
 	if err != nil {

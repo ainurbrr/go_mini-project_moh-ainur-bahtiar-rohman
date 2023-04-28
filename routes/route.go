@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"penggalangan-dana/middlewares"
+	"penggalangan-dana/constants"
 	"penggalangan-dana/controllers"
+	"penggalangan-dana/middlewares"
 
 	"github.com/labstack/echo/v4"
 	mid "github.com/labstack/echo/v4/middleware"
@@ -15,7 +16,7 @@ func Routes() *echo.Echo {
 
 	e.POST("/users", controllers.RegisterUserController)
 	e.POST("/login", controllers.LoginUserController)
-	e.PUT("/upload/:id", controllers.UploadAvatarController)
+	e.PUT("/avatar", controllers.UploadAvatarController, mid.JWT([]byte(constants.SECRET_JWT)))
 
 	return e
 }

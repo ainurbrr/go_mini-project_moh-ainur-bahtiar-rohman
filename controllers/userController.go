@@ -3,7 +3,9 @@ package controllers
 import (
 	"net/http"
 	"penggalangan-dana/formatter"
+	"penggalangan-dana/helpers"
 	"penggalangan-dana/lib/database"
+	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
 
 	"github.com/labstack/echo/v4"
@@ -16,12 +18,15 @@ func RegisterUserController(c echo.Context) error {
 	}
 	userStruct := user.(models.User)
 
-	formatUser := formatter.FormatUser(userStruct, "tokenjwt")
+	token, err := middlewares.GenerateToken(userStruct.ID)
+	if err != nil {
+		return err
+	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success create new user",
-		"user":    formatUser,
-	})
+	formatUser := formatter.FormatUser(userStruct, token)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatUser, "User Registered Successfully")
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func LoginUserController(c echo.Context) error {
@@ -31,13 +36,15 @@ func LoginUserController(c echo.Context) error {
 	}
 
 	userStruct := userLogin.(models.User)
+	token, err := middlewares.GenerateToken(userStruct.ID)
+	if err != nil {
+		return err
+	}
 
-	formatUser := formatter.FormatUser(userStruct, "tokenjwt")
+	formatUser := formatter.FormatUser(userStruct, token)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatUser, "Login Successfully")
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Login Successfully",
-		"user":    formatUser,
-	})
+	return c.JSON(http.StatusOK, response)
 }
 
 func UploadAvatarController(c echo.Context) error {
@@ -45,9 +52,7 @@ func UploadAvatarController(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message" : "Succes update user",
-		"user" : user,
-	})
+	response := helpers.APIResponse(http.StatusOK, "succes", user, "Avatar Successfully Uploaded")
+
+	return c.JSON(http.StatusOK, response)
 }
