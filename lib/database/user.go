@@ -9,17 +9,11 @@ import (
 	"penggalangan-dana/config"
 	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
+	"penggalangan-dana/usecase"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
-
-func isEmailAvailable(email string) bool {
-	var count int64
-	user := models.User{}
-	config.DB.Model(&user).Where("email = ?", email).Count(&count)
-	return count == 0
-}
 
 func RegisterUser(c echo.Context) (interface{}, error) {
 	user := models.User{}
@@ -31,7 +25,7 @@ func RegisterUser(c echo.Context) (interface{}, error) {
 	}
 	user.Password = string(passwordHash)
 
-	if !isEmailAvailable(user.Email) {
+	if !usecase.IsEmailAvailable(user.Email) {
 		return nil, errors.New("email is already taken")
 	}
 
@@ -59,27 +53,13 @@ func LoginUser(c echo.Context) (interface{}, error) {
 	return user, nil
 }
 
-func FindById(id int) (interface{}, error) {
-
-	user := models.User{}
-	err := config.DB.Model(&user).Where("id = ?", id).Find(&user).Error
-	if err != nil {
-		return nil, err
-	}
-
-	if user.ID == 0 {
-		return nil, errors.New("user not found")
-	}
-	return user, nil
-}
-
 func Update(c echo.Context) (interface{}, error) {
 	id, err := middlewares.ExtractTokenId(c)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := FindById(id)
+	user, err := usecase.FindById(id)
 	if err != nil {
 		return nil, err
 	}
