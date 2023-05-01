@@ -18,5 +18,8 @@ func Routes() *echo.Echo {
 	e.POST("/login", controllers.LoginUserController)
 	e.PUT("/avatar", controllers.UploadAvatarController, mid.JWT([]byte(constants.SECRET_JWT)))
 
+	e.GET("/campaigns", controllers.GetCampaignsController)
+	e.GET("/campaigns/:user_id", controllers.GetCampaignController)
+
 	return e
 }

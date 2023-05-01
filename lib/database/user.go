@@ -9,11 +9,20 @@ import (
 	"penggalangan-dana/config"
 	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
-	"penggalangan-dana/usecase"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
+
+func IsEmailAvailable(email string) bool {
+	var count int64
+	user := models.User{}
+	if err := config.DB.Model(&user).Where("email = ?", email).Count(&count).Error; err != nil {
+		echo.NewHTTPError(http.StatusNotFound, err.Error())
+		return false
+	}
+	return count == 0
+}
 
 func RegisterUser(c echo.Context) (interface{}, error) {
 	user := models.User{}
@@ -25,7 +34,7 @@ func RegisterUser(c echo.Context) (interface{}, error) {
 	}
 	user.Password = string(passwordHash)
 
-	if !usecase.IsEmailAvailable(user.Email) {
+	if !IsEmailAvailable(user.Email) {
 		return nil, errors.New("email is already taken")
 	}
 
@@ -53,13 +62,26 @@ func LoginUser(c echo.Context) (interface{}, error) {
 	return user, nil
 }
 
+func GetById(id int) (interface{}, error) {
+	user := models.User{}
+	err := config.DB.Model(&user).Where("id = ?", id).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if user.ID == 0 {
+		return nil, errors.New("user not found")
+	}
+	return user, nil
+}
+
 func Update(c echo.Context) (interface{}, error) {
 	id, err := middlewares.ExtractTokenId(c)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := usecase.FindById(id)
+	user, err := GetById(id)
 	if err != nil {
 		return nil, err
 	}

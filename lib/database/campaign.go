@@ -23,3 +23,19 @@ func FindByUserId(user_id int) (interface{}, error) {
 	}
 	return campaigns, nil
 }
+
+func GetCampaigns(user_id int) (interface{}, error) {
+	if user_id != 0 {
+		campaigns, err := FindByUserId(user_id)
+		if err != nil {
+			return campaigns, err
+		}
+		return campaigns, nil
+	}
+
+	campaigns, err := FindAll()
+	if err != nil {
+		return campaigns, err
+	}
+	return campaigns, nil
+}
