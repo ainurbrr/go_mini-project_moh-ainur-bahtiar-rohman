@@ -39,3 +39,15 @@ func GetCampaignsController(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, response)
 }
+
+func CreateCampaignController(c echo.Context) error {
+	campaign, err := database.CreateCampaign(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	campaignStruct := campaign.(models.Campaign)
+	formatCampaign := formatter.FormatCampaign(campaignStruct)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully created campaign")
+
+	return c.JSON(http.StatusOK, response)
+}

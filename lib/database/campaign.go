@@ -1,8 +1,14 @@
 package database
 
 import (
+	"fmt"
 	"penggalangan-dana/config"
+	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
+	"time"
+
+	"github.com/gosimple/slug"
+	"github.com/labstack/echo/v4"
 )
 
 func FindAll() (interface{}, error) {
@@ -38,4 +44,25 @@ func GetCampaigns(user_id int) (interface{}, error) {
 		return campaigns, err
 	}
 	return campaigns, nil
+}
+
+func CreateCampaign(c echo.Context) (interface{}, error) {
+	campaign := models.Campaign{}
+	c.Bind(&campaign)
+
+	id, err := middlewares.ExtractTokenId(c)
+	if err != nil {
+		return nil, err
+	}
+	campaign.UserID = id
+	strSlug := fmt.Sprintf("%s %d", campaign.Name, campaign.UserID)
+	campaign.Slug = slug.Make(strSlug)
+	time, _ := time.Parse("02/01/2006", c.FormValue("end_date"))
+	campaign.EndDate = time
+
+	if err := config.DB.Create(&campaign).Error; err != nil {
+		return nil, err
+	}
+	return campaign, nil
+
 }
