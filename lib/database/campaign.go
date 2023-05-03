@@ -46,6 +46,15 @@ func GetCampaigns(user_id int) (interface{}, error) {
 	return campaigns, nil
 }
 
+func FindById(id int) (interface{}, error) {
+	var campaign models.Campaign
+
+	if err := config.DB.Preload("User").Preload("CampaignImages").Where("id = ?", id).Find(&campaign).Error; err != nil {
+		return nil, err
+	}
+	return campaign, nil
+}
+
 func CreateCampaign(c echo.Context) (interface{}, error) {
 	campaign := models.Campaign{}
 	c.Bind(&campaign)

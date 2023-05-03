@@ -11,11 +11,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetCampaignController(c echo.Context) error {
-	user_id, err := strconv.Atoi(c.Param("user_id"))
-	if err != nil {
-		return err
-	}
+func GetCampaignsController(c echo.Context) error {
+	
+	user_id, _ := strconv.Atoi(c.QueryParam("user_id"))
 
 	campaign, err := database.GetCampaigns(user_id)
 	if err != nil {
@@ -23,19 +21,27 @@ func GetCampaignController(c echo.Context) error {
 	}
 	campaignStruct := campaign.([]models.Campaign)
 	formatCampaign := formatter.FormatCampaigns(campaignStruct)
-	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully Get Campaigns By User Id")
+	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully Get Campaigns")
 
 	return c.JSON(http.StatusOK, response)
 }
 
-func GetCampaignsController(c echo.Context) error {
-	campaigns, err := database.GetCampaigns(0)
+func GetCampaignController(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-	campaignsStruct := campaigns.([]models.Campaign)
-	formatCampaigns := formatter.FormatCampaigns(campaignsStruct)
-	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaigns, "Successfully Get All List Campaigns")
+
+	campaign, err := database.FindById(id)
+	if err != nil {
+		return err
+	}
+	campaignsStruct := campaign.(models.Campaign)
+	formatCampaign, err := formatter.FormatCampaignDetail(campaignsStruct)
+	if err != nil {
+		return err
+	}
+	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully Get Campaign detail By Id")
 
 	return c.JSON(http.StatusOK, response)
 }
