@@ -25,6 +25,7 @@ func Routes() *echo.Echo {
 	e.GET("/campaigns", controllers.GetCampaignsController)
 	e.GET("/campaigns/:id", controllers.GetCampaignController)
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
+	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 
 	return e
 }

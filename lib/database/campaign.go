@@ -1,10 +1,12 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"penggalangan-dana/config"
 	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
+	"strconv"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -74,4 +76,33 @@ func CreateCampaign(c echo.Context) (interface{}, error) {
 	}
 	return campaign, nil
 
+}
+
+func UpdateCampaign(c echo.Context) (interface{}, error) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	campaign, err := FindById(id)
+	if err != nil {
+		return nil, err
+	}
+	idFromToken, err := middlewares.ExtractTokenId(c)
+	if err != nil {
+		return nil, err
+	}
+
+	campaignModel := campaign.(models.Campaign)
+
+	c.Bind(&campaignModel)
+
+	if campaignModel.UserID != idFromToken {
+		return nil, errors.New("Unauthorized")
+	}
+
+	time, _ := time.Parse("02/01/2006", c.FormValue("end_date"))
+	campaignModel.EndDate = time
+
+	if err := config.DB.Model(&campaignModel).Updates(campaignModel).Error; err != nil {
+		return nil, err
+	}
+
+	return campaignModel, nil
 }
