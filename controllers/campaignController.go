@@ -57,3 +57,14 @@ func CreateCampaignController(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, response)
 }
+
+func UpdateCampaignController(c echo.Context) error {
+	campaign, err := database.UpdateCampaign(c)
+	if err != nil {
+		return err
+	}
+	response := helpers.APIResponse(http.StatusOK, "succes", campaign, "Success to Update Campaign")
+
+	return c.JSON(http.StatusOK, response)
+}
+
