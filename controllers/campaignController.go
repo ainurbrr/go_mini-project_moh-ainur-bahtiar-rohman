@@ -68,3 +68,12 @@ func UpdateCampaignController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+func UploadCampaignImageController(c echo.Context) error {
+	campaignImage, err := database.UploadImage(c)
+	if err != nil {
+		return err
+	}
+	response := helpers.APIResponse(http.StatusOK, "succes", campaignImage, "Campaign Image Successfully Uploaded")
+	return c.JSON(http.StatusOK, response)
+}
+
