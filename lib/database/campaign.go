@@ -3,6 +3,9 @@ package database
 import (
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
 	"penggalangan-dana/config"
 	"penggalangan-dana/middlewares"
 	"penggalangan-dana/models"
@@ -106,3 +109,73 @@ func UpdateCampaign(c echo.Context) (interface{}, error) {
 
 	return campaignModel, nil
 }
+
+func UploadImage(c echo.Context) (interface{}, error) {
+	id := c.FormValue("campaign_id")
+	campaign_id, _ := strconv.Atoi(id)
+	campaign, err := FindById(campaign_id)
+	if err != nil {
+		return nil, err
+	}
+	campaignModel := campaign.(models.Campaign)
+
+	c.Bind(&campaignModel)
+	idFromToken, err := middlewares.ExtractTokenId(c)
+	if err != nil {
+		return nil, err
+	}
+	if campaignModel.UserID != idFromToken {
+		return nil, errors.New("Unauthorized")
+	}
+
+	campaignImageModel := models.Campaign_image{}
+
+	file, err := c.FormFile("file_name")
+	if err != nil {
+		return nil, err
+	}
+	path := fmt.Sprintf("images/campaignImages/%d-%s", campaign_id, file.Filename)
+	c.Bind(&campaignImageModel)
+	campaignImageModel.FileName = path
+	if campaignImageModel.IsPrimary == 1{
+		_, err := MarkAllImagesAsNonPrimary(campaign_id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	//upload the image
+	src, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+	// Create a new file on disk
+	dst, err := os.Create(path)
+	if err != nil {
+		return nil, err
+	}
+	defer dst.Close()
+	// Copy the uploaded file to the destination file
+	if _, err = io.Copy(dst, src); err != nil {
+		return nil, err
+	}
+	
+
+	//save to db
+	if err := config.DB.Create(&campaignImageModel).Error; err != nil {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return campaignImageModel, nil
+}
+
+func MarkAllImagesAsNonPrimary(campaignId int) (bool, error) {
+	campaign_image := models.Campaign_image{}
+	if err := config.DB.Model(&campaign_image).Where("campaign_id = ?", campaignId).Update("is_primary", 0).Error; err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+
