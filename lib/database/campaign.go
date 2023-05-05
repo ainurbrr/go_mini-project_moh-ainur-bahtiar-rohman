@@ -26,18 +26,18 @@ func FindAll() (interface{}, error) {
 
 }
 
-func FindByUserId(user_id int) (interface{}, error) {
+func FindByUserId(userId int) (interface{}, error) {
 	var campaigns []models.Campaign
 
-	if err := config.DB.Where("user_id = ?", user_id).Preload("CampaignImages", "campaign_images.is_primary = 1").Find(&campaigns).Error; err != nil {
+	if err := config.DB.Where("user_id = ?", userId).Preload("CampaignImages", "campaign_images.is_primary = 1").Find(&campaigns).Error; err != nil {
 		return campaigns, err
 	}
 	return campaigns, nil
 }
 
-func GetCampaigns(user_id int) (interface{}, error) {
-	if user_id != 0 {
-		campaigns, err := FindByUserId(user_id)
+func GetCampaigns(userId int) (interface{}, error) {
+	if userId != 0 {
+		campaigns, err := FindByUserId(userId)
 		if err != nil {
 			return campaigns, err
 		}

@@ -16,7 +16,7 @@ func Routes() *echo.Echo {
 	e.Pre(mid.RemoveTrailingSlash())
 
 	e.Static("/images/avatar", "./images/avatar")
-	e.Static("/images/campaign", "./images/campaign")
+	e.Static("/images/campaignImages", "./images/campaignImages")
 
 	e.POST("/users", controllers.RegisterUserController)
 	e.POST("/login", controllers.LoginUserController)
@@ -27,6 +27,8 @@ func Routes() *echo.Echo {
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/campaign-images", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
+
+	e.GET("campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 
 	return e
 }
