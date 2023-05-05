@@ -36,9 +36,28 @@ func GetTransactionsByCampaignId(c echo.Context) (interface{}, error) {
 
 	campaignModel := campaign.(models.Campaign)
 
-	if campaignModel.UserID != idFromToken{
+	if campaignModel.UserID != idFromToken {
 		return nil, errors.New("Unauthorized")
 	}
 
 	return transactions, nil
+}
+
+func GetByUserId(userId int)(interface{}, error){
+	var transactions []models.Transaction
+	if err := config.DB.Preload("User").Preload("Campaign").Preload("Campaign.CampaignImages", "campaign_images.is_primary = 1").Where("user_id = ?", userId).Order("id desc").Find(&transactions).Error; err != nil{
+		return transactions, err
+	}
+	return transactions, nil
+}
+
+
+func GetTransactionByUserId(c echo.Context)(interface{}, error) {
+	idFromToken, _ := middlewares.ExtractTokenId(c)
+	transactions, err := GetByUserId(idFromToken)
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
+
 }

@@ -12,7 +12,6 @@ type UserFormatter struct {
 }
 
 func FormatUser(user models.User, token string) UserFormatter {
-	
 
 	formatter := UserFormatter{
 		ID:         user.ID,

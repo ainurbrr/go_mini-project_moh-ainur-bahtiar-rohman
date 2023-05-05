@@ -137,7 +137,7 @@ func UploadImage(c echo.Context) (interface{}, error) {
 	path := fmt.Sprintf("images/campaignImages/%d-%s", campaign_id, file.Filename)
 	c.Bind(&campaignImageModel)
 	campaignImageModel.FileName = path
-	if campaignImageModel.IsPrimary == 1{
+	if campaignImageModel.IsPrimary == 1 {
 		_, err := MarkAllImagesAsNonPrimary(campaign_id)
 		if err != nil {
 			return nil, err
@@ -160,7 +160,6 @@ func UploadImage(c echo.Context) (interface{}, error) {
 	if _, err = io.Copy(dst, src); err != nil {
 		return nil, err
 	}
-	
 
 	//save to db
 	if err := config.DB.Create(&campaignImageModel).Error; err != nil {
@@ -177,5 +176,3 @@ func MarkAllImagesAsNonPrimary(campaignId int) (bool, error) {
 	}
 	return true, nil
 }
-
-

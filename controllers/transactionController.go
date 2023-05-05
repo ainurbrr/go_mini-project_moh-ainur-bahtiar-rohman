@@ -24,3 +24,16 @@ func GetCampaignTransactionsController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 
 }
+
+func GetUserTransactionsController(c echo.Context) error {
+	transactions, err := database.GetTransactionByUserId(c)
+	if err != nil {
+		return err
+	}
+
+	userTransactionsStruct := transactions.([]models.Transaction)
+	formatUserTransaction := formatter.FormatUserTransactions(userTransactionsStruct)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatUserTransaction, "Successfully get user transactions")
+
+	return c.JSON(http.StatusOK, response)
+}
