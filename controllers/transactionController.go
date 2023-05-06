@@ -6,6 +6,7 @@ import (
 	"penggalangan-dana/helpers"
 	"penggalangan-dana/lib/database"
 	"penggalangan-dana/models"
+	"penggalangan-dana/payment"
 
 	"github.com/labstack/echo/v4"
 )
@@ -36,4 +37,34 @@ func GetUserTransactionsController(c echo.Context) error {
 	response := helpers.APIResponse(http.StatusOK, "succes", formatUserTransaction, "Successfully get user transactions")
 
 	return c.JSON(http.StatusOK, response)
+}
+
+func CreateTransactionController(c echo.Context) error {
+	transaction, err := database.CreateTransaction(c)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	transactionStruct := transaction.(models.Transaction)
+	formatTransaction := formatter.FormatTransaction(transactionStruct)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatTransaction, "Successfully created transaction")
+
+	return c.JSON(http.StatusOK, response)
+}
+
+
+func GetNotificationController(c echo.Context) error {
+	var input payment.PaymentNotificationInput
+
+	err := c.Bind(&input)
+	if err != nil {
+		return err
+	}
+	
+	err = database.ProcessPayment(c, input)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, input)
 }

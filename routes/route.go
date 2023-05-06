@@ -12,6 +12,7 @@ import (
 func Routes() *echo.Echo {
 	e := echo.New()
 	middlewares.LogMiddleware(e)
+	e.Use(mid.CORS())
 	e.Pre(mid.RemoveTrailingSlash())
 
 	e.Static("/images/avatar", "./images/avatar")
@@ -29,6 +30,8 @@ func Routes() *echo.Echo {
 
 	e.GET("/campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.GET("/transactions", controllers.GetUserTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
+	e.POST("/transactions", controllers.CreateTransactionController, mid.JWT([]byte(constants.SECRET_JWT)))
+	e.POST("/transactions/notification", controllers.GetNotificationController, mid.JWT([]byte(constants.SECRET_JWT)))
 
 	return e
 }

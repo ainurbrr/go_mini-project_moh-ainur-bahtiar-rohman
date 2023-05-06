@@ -36,18 +36,18 @@ func FormatCampaignTransactions(transactions []models.Transaction) []CampaignTra
 }
 
 type UserTransactionFormatter struct {
-	ID int `json:"id"`
-	Amount int `json:"amount"`
-	Status string `json:"status"`
-	CreatedAt time.Time `json:"created_at"`
-	Campaign UserTransactionsCampaignFormatter `json:"campaign"`
+	ID        int                               `json:"id"`
+	Amount    int                               `json:"amount"`
+	Status    string                            `json:"status"`
+	CreatedAt time.Time                         `json:"created_at"`
+	Campaign  UserTransactionsCampaignFormatter `json:"campaign"`
 }
-type UserTransactionsCampaignFormatter struct{
-	Name string `json:"name"`
+type UserTransactionsCampaignFormatter struct {
+	Name     string `json:"name"`
 	ImageURL string `json:"image_url"`
 }
 
-func FormatUserTransaction(transaction models.Transaction) UserTransactionFormatter{
+func FormatUserTransaction(transaction models.Transaction) UserTransactionFormatter {
 	formatter := UserTransactionFormatter{}
 	formatter.ID = transaction.ID
 	formatter.Amount = transaction.Amount
@@ -58,7 +58,7 @@ func FormatUserTransaction(transaction models.Transaction) UserTransactionFormat
 	campaignFormatter.Name = transaction.Campaign.Name
 	campaignFormatter.ImageURL = ""
 
-	if len(transaction.Campaign.CampaignImages) >0{
+	if len(transaction.Campaign.CampaignImages) > 0 {
 		campaignFormatter.ImageURL = transaction.Campaign.CampaignImages[0].FileName
 	}
 	formatter.Campaign = campaignFormatter
@@ -76,4 +76,29 @@ func FormatUserTransactions(transactions []models.Transaction) []UserTransaction
 		formatters = append(formatters, formatter)
 	}
 	return formatters
+}
+
+type TransactionFormatter struct {
+	ID         int       `json:"id"`
+	CampaignID int       `json:"campaign_id"`
+	UserID     int       `json:"user_id"`
+	Amount     int       `json:"amount"`
+	Code       string    `json:"code"`
+	Status     string    `json:"status"`
+	PaymentURL string    `json:"payment_url"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+func FormatTransaction(transaction models.Transaction) TransactionFormatter {
+	formatter := TransactionFormatter{}
+
+	formatter.ID = transaction.ID
+	formatter.CampaignID = transaction.CampaignID
+	formatter.UserID = transaction.UserID
+	formatter.Status = transaction.Status
+	formatter.Amount = transaction.Amount
+	formatter.Code = transaction.Code
+	formatter.PaymentURL = transaction.PaymentURL
+
+	return formatter
 }
