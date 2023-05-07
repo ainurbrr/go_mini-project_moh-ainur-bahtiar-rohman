@@ -5,7 +5,7 @@ import (
 	"struktur-penggalangan-dana/models"
 )
 
-func GetUserById(id int) (*models.User, error) {
+func FindUserById(id int) (*models.User, error) {
 	var user models.User
 
 	if err := config.DB.Where("id = ?", user.ID).First(&user).Error; err != nil {

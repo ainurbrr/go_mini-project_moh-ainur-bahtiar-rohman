@@ -38,7 +38,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	e.PUT("/avatar", controllers.UploadAvatarController, mid.JWT([]byte(constants.SECRET_JWT)))
 
 	e.GET("/campaigns", controllers.GetCampaignsController)
-	e.GET("/campaigns/:id", controllers.GetCampaignController)
+	e.GET("/campaigns/:id", controllers.GetCampaignDetailController)
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/campaign-images", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
@@ -46,5 +46,5 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.GET("/transactions", controllers.GetUserTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/transactions", controllers.CreateTransactionController, mid.JWT([]byte(constants.SECRET_JWT)))
-	e.POST("/transactions/notification", controllers.GetNotificationController, mid.JWT([]byte(constants.SECRET_JWT)))
+	// e.POST("/transactions/notification", controllers.GetNotificationController, mid.JWT([]byte(constants.SECRET_JWT)))
 }

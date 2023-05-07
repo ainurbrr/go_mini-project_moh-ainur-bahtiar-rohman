@@ -4,9 +4,8 @@ import (
 	"net/http"
 	"struktur-penggalangan-dana/formatter"
 	"struktur-penggalangan-dana/helpers"
-	"struktur-penggalangan-dana/repository/database"
 	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/payment"
+	"struktur-penggalangan-dana/repository/database"
 
 	"github.com/labstack/echo/v4"
 )
@@ -52,18 +51,18 @@ func CreateTransactionController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func GetNotificationController(c echo.Context) error {
-	var input payment.PaymentNotificationInput
+// func GetNotificationController(c echo.Context) error {
+// 	var input payment.PaymentNotificationInput
 
-	err := c.Bind(&input)
-	if err != nil {
-		return err
-	}
+// 	err := c.Bind(&input)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = database.ProcessPayment(c, input)
-	if err != nil {
-		return err
-	}
+// 	err = database.ProcessPayment(c, input)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return c.JSON(http.StatusOK, input)
-}
+// 	return c.JSON(http.StatusOK, input)
+// }
