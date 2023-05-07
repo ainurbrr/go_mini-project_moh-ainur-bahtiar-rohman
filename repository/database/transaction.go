@@ -35,9 +35,9 @@ func GetTransactionsByCampaignId(c echo.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	campaignModel := campaign.(models.Campaign)
+	
 
-	if campaignModel.UserID != idFromToken {
+	if campaign.UserID != idFromToken {
 		return nil, errors.New("Unauthorized")
 	}
 
@@ -80,7 +80,7 @@ func CreateTransaction(c echo.Context) (interface{}, error) {
 	transaction.Code = ""
 
 	idFromToken, _ := middlewares.ExtractTokenId(c)
-	user, _ := GetUserById(idFromToken)
+	user, _ := FindUserById(idFromToken)
 	userModel := user
 	transaction.User = userModel
 
@@ -118,43 +118,43 @@ func GetTransactionById(Id int) (interface{}, error) {
 
 }
 
-func ProcessPayment(c echo.Context, input payment.PaymentNotificationInput) error {
-	transactionId, _ := strconv.Atoi(input.OrderID)
-	transaction, err := GetTransactionById(transactionId)
-	if err != nil {
-		return err
-	}
-	transactionModel := transaction.(models.Transaction)
+// func ProcessPayment(c echo.Context, input payment.PaymentNotificationInput) error {
+// 	transactionId, _ := strconv.Atoi(input.OrderID)
+// 	transaction, err := GetTransactionById(transactionId)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	transactionModel := transaction.(models.Transaction)
 
-	if input.PaymentType == "credit_card" && input.TransactionStatus == "camptured" && input.FraudStatus == "accept" {
-		transactionModel.Status = "paid"
-	} else if input.TransactionStatus == "settlement" {
-		transactionModel.Status = "paid"
-	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
-		transactionModel.Status = "cancelled"
-	}
+// 	if input.PaymentType == "credit_card" && input.TransactionStatus == "camptured" && input.FraudStatus == "accept" {
+// 		transactionModel.Status = "paid"
+// 	} else if input.TransactionStatus == "settlement" {
+// 		transactionModel.Status = "paid"
+// 	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
+// 		transactionModel.Status = "cancelled"
+// 	}
 
-	updatedTransaction, err := UpdateTransaction(transactionModel)
-	if err != nil {
-		return err
-	}
+// 	updatedTransaction, err := UpdateTransaction(transactionModel)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	campaign, err := FindCampaignById(updatedTransaction.CampaignID)
-	campaignModel := campaign.(models.Campaign)
-	if err != nil {
-		return err
-	}
+// 	campaign, err := FindCampaignById(updatedTransaction.CampaignID)
+	
+// 	if err != nil {
+// 		return err
+// 	}
 
-	if updatedTransaction.Status == "paid" {
-		campaignModel.BackerCount = campaignModel.BackerCount + 1
-		campaignModel.TotalAmount = campaignModel.TotalAmount + updatedTransaction.Amount
+// 	if updatedTransaction.Status == "paid" {
+// 		campaign.BackerCount = campaign.BackerCount + 1
+// 		campaign.TotalAmount = campaign.TotalAmount + updatedTransaction.Amount
 
-		_, err := UpdateCampaign(c)
-		if err != nil {
-			return err
-		}
-	}
+// 		_, err := UpdateCampaign(c)
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
 
-	return nil
+// 	return nil
 
-}
+// }

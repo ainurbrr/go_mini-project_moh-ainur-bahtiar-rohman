@@ -18,7 +18,7 @@ func UploadAvatar(c echo.Context) (user *models.User, err error) {
 		return
 	}
 
-	user, err = database.GetUserById(id)
+	user, err = database.FindUserById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func UploadAvatar(c echo.Context) (user *models.User, err error) {
 		return nil, err
 	}
 
-	if err := database.UpdateUser(user).Error; err != nil {
+	if err := database.UpdateUser(user); err != nil {
 		return nil, echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 	return user, nil

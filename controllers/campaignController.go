@@ -5,8 +5,9 @@ import (
 	"strconv"
 	"struktur-penggalangan-dana/formatter"
 	"struktur-penggalangan-dana/helpers"
-	"struktur-penggalangan-dana/repository/database"
 	"struktur-penggalangan-dana/models"
+	"struktur-penggalangan-dana/models/payload"
+	"struktur-penggalangan-dana/usecase"
 
 	"github.com/labstack/echo/v4"
 )
@@ -15,29 +16,28 @@ func GetCampaignsController(c echo.Context) error {
 
 	user_id, _ := strconv.Atoi(c.QueryParam("user_id"))
 
-	campaign, err := database.GetCampaigns(user_id)
+	campaign, err := usecase.GetCampaigns(user_id)
 	if err != nil {
 		return err
 	}
-	campaignStruct := campaign.([]models.Campaign)
-	formatCampaign := formatter.FormatCampaigns(campaignStruct)
+	campaignModel := campaign.([]models.Campaign)
+	formatCampaign := formatter.FormatCampaigns(campaignModel)
 	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully Get Campaigns")
 
 	return c.JSON(http.StatusOK, response)
 }
 
-func GetCampaignController(c echo.Context) error {
+func GetCampaignDetailController(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
 
-	campaign, err := database.FindCampaignById(id)
+	campaign, err := usecase.GetCampaign(id)
 	if err != nil {
 		return err
 	}
-	campaignsStruct := campaign.(models.Campaign)
-	formatCampaign, err := formatter.FormatCampaignDetail(campaignsStruct)
+	formatCampaign, err := formatter.FormatCampaignDetail(campaign)
 	if err != nil {
 		return err
 	}
@@ -47,29 +47,42 @@ func GetCampaignController(c echo.Context) error {
 }
 
 func CreateCampaignController(c echo.Context) error {
-	campaign, err := database.CreateCampaign(c)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	payloadCampaign := payload.CreateCampaignRequest{}
+	c.Bind(&payloadCampaign)
+
+	if err := c.Validate(payloadCampaign); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"messages": "error payload create campaign",
+			"error":    err.Error(),
+		})
 	}
-	campaignStruct := campaign.(models.Campaign)
-	formatCampaign := formatter.FormatCampaign(campaignStruct)
+	campaign, err := usecase.CreateCampaign(c, &payloadCampaign)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"messages": "error create campaign",
+			"error":    err.Error(),
+		})
+	}
+
+	formatCampaign := formatter.FormatCampaign(campaign)
 	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaign, "Successfully created campaign")
 
 	return c.JSON(http.StatusOK, response)
 }
 
 func UpdateCampaignController(c echo.Context) error {
-	campaign, err := database.UpdateCampaign(c)
+	campaign, err := usecase.UpdateCampaign(c)
 	if err != nil {
 		return err
 	}
-	response := helpers.APIResponse(http.StatusOK, "succes", campaign, "Success to Update Campaign")
+	formatCampaignUpdated,_ := formatter.FormatCampaignDetail(campaign)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaignUpdated, "Success to Update Campaign")
 
 	return c.JSON(http.StatusOK, response)
 }
 
 func UploadCampaignImageController(c echo.Context) error {
-	campaignImage, err := database.UploadImage(c)
+	campaignImage, err := usecase.UploadCampaignImage(c)
 	if err != nil {
 		return err
 	}
