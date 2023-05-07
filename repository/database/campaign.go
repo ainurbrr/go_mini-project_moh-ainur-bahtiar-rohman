@@ -6,17 +6,17 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"penggalangan-dana/config"
-	"penggalangan-dana/middlewares"
-	"penggalangan-dana/models"
 	"strconv"
+	"struktur-penggalangan-dana/config"
+	"struktur-penggalangan-dana/middlewares"
+	"struktur-penggalangan-dana/models"
 	"time"
 
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 )
 
-func FindAll() (interface{}, error) {
+func FindAllCampaign() (interface{}, error) {
 	var campaigns []models.Campaign
 
 	if err := config.DB.Preload("CampaignImages", "campaign_images.is_primary = 1").Find(&campaigns).Error; err != nil {
@@ -26,7 +26,7 @@ func FindAll() (interface{}, error) {
 
 }
 
-func FindByUserId(userId int) (interface{}, error) {
+func FindCampaignByUserId(userId int) (interface{}, error) {
 	var campaigns []models.Campaign
 
 	if err := config.DB.Where("user_id = ?", userId).Preload("CampaignImages", "campaign_images.is_primary = 1").Find(&campaigns).Error; err != nil {
@@ -35,23 +35,7 @@ func FindByUserId(userId int) (interface{}, error) {
 	return campaigns, nil
 }
 
-func GetCampaigns(userId int) (interface{}, error) {
-	if userId != 0 {
-		campaigns, err := FindByUserId(userId)
-		if err != nil {
-			return campaigns, err
-		}
-		return campaigns, nil
-	}
-
-	campaigns, err := FindAll()
-	if err != nil {
-		return campaigns, err
-	}
-	return campaigns, nil
-}
-
-func FindById(id int) (interface{}, error) {
+func FindCampaignById(id int) (interface{}, error) {
 	var campaign models.Campaign
 
 	if err := config.DB.Preload("User").Preload("CampaignImages").Where("id = ?", id).Find(&campaign).Error; err != nil {
@@ -59,6 +43,24 @@ func FindById(id int) (interface{}, error) {
 	}
 	return campaign, nil
 }
+
+func GetCampaigns(userId int) (interface{}, error) {
+	if userId != 0 {
+		campaigns, err := FindCampaignByUserId(userId)
+		if err != nil {
+			return campaigns, err
+		}
+		return campaigns, nil
+	}
+
+	campaigns, err := FindAllCampaign()
+	if err != nil {
+		return campaigns, err
+	}
+	return campaigns, nil
+}
+
+
 
 func CreateCampaign(c echo.Context) (interface{}, error) {
 	campaign := models.Campaign{}
@@ -83,7 +85,7 @@ func CreateCampaign(c echo.Context) (interface{}, error) {
 
 func UpdateCampaign(c echo.Context) (interface{}, error) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	campaign, err := FindById(id)
+	campaign, err := FindCampaignById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +115,7 @@ func UpdateCampaign(c echo.Context) (interface{}, error) {
 func UploadImage(c echo.Context) (interface{}, error) {
 	id := c.FormValue("campaign_id")
 	campaign_id, _ := strconv.Atoi(id)
-	campaign, err := FindById(campaign_id)
+	campaign, err := FindCampaignById(campaign_id)
 	if err != nil {
 		return nil, err
 	}

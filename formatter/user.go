@@ -1,6 +1,6 @@
 package formatter
 
-import "penggalangan-dana/models"
+import "struktur-penggalangan-dana/models"
 
 type UserFormatter struct {
 	ID         int    `json:"id"`

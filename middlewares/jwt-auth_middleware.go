@@ -3,7 +3,7 @@ package middlewares
 import (
 	"errors"
 	"net/http"
-	"penggalangan-dana/constants"
+	"struktur-penggalangan-dana/constants"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"

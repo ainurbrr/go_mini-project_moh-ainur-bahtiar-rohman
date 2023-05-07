@@ -2,7 +2,7 @@ package formatter
 
 import (
 	"errors"
-	"penggalangan-dana/models"
+	"struktur-penggalangan-dana/models"
 	"time"
 )
 

@@ -2,53 +2,39 @@ package controllers
 
 import (
 	"net/http"
-	"penggalangan-dana/formatter"
-	"penggalangan-dana/helpers"
-	"penggalangan-dana/lib/database"
-	"penggalangan-dana/middlewares"
-	"penggalangan-dana/models"
+	"struktur-penggalangan-dana/helpers"
+	"struktur-penggalangan-dana/models/payload"
+	"struktur-penggalangan-dana/usecase"
 
 	"github.com/labstack/echo/v4"
 )
 
 func RegisterUserController(c echo.Context) error {
-	user, err := database.RegisterUser(c)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	userStruct := user.(models.User)
+	payloadUser := payload.CreateUserRequest{}
+	c.Bind(&payloadUser)
 
-	token, err := middlewares.GenerateToken(userStruct.ID)
-	if err != nil {
-		return err
-	}
-
-	formatUser := formatter.FormatUser(userStruct, token)
-	response := helpers.APIResponse(http.StatusOK, "succes", formatUser, "User Registered Successfully")
-
-	return c.JSON(http.StatusOK, response)
-}
-
-func LoginUserController(c echo.Context) error {
-	userLogin, err := database.LoginUser(c)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	if err := c.Validate(payloadUser); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"messages": "error payload create user",
+			"error":    err.Error(),
+		})
 	}
 
-	userStruct := userLogin.(models.User)
-	token, err := middlewares.GenerateToken(userStruct.ID)
+	resp, err := usecase.CreateUser(&payloadUser)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"messages": "error create user",
+			"error":    err.Error(),
+		})
 	}
 
-	formatUser := formatter.FormatUser(userStruct, token)
-	response := helpers.APIResponse(http.StatusOK, "succes", formatUser, "Login Successfully")
+	response := helpers.APIResponse(http.StatusOK, "success", resp, "Succes! Account has been registered")
 
 	return c.JSON(http.StatusOK, response)
 }
 
 func UploadAvatarController(c echo.Context) error {
-	user, err := database.Update(c)
+	user, err := usecase.UploadAvatar(c)
 	if err != nil {
 		return err
 	}

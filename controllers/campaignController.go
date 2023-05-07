@@ -2,17 +2,17 @@ package controllers
 
 import (
 	"net/http"
-	"penggalangan-dana/formatter"
-	"penggalangan-dana/helpers"
-	"penggalangan-dana/lib/database"
-	"penggalangan-dana/models"
 	"strconv"
+	"struktur-penggalangan-dana/formatter"
+	"struktur-penggalangan-dana/helpers"
+	"struktur-penggalangan-dana/repository/database"
+	"struktur-penggalangan-dana/models"
 
 	"github.com/labstack/echo/v4"
 )
 
 func GetCampaignsController(c echo.Context) error {
-	
+
 	user_id, _ := strconv.Atoi(c.QueryParam("user_id"))
 
 	campaign, err := database.GetCampaigns(user_id)
@@ -32,7 +32,7 @@ func GetCampaignController(c echo.Context) error {
 		return err
 	}
 
-	campaign, err := database.FindById(id)
+	campaign, err := database.FindCampaignById(id)
 	if err != nil {
 		return err
 	}
@@ -76,4 +76,3 @@ func UploadCampaignImageController(c echo.Context) error {
 	response := helpers.APIResponse(http.StatusOK, "succes", campaignImage, "Campaign Image Successfully Uploaded")
 	return c.JSON(http.StatusOK, response)
 }
-
