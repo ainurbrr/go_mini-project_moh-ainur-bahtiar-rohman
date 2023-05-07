@@ -1,17 +1,32 @@
 package routes
 
 import (
-	"penggalangan-dana/constants"
-	"penggalangan-dana/controllers"
-	"penggalangan-dana/middlewares"
+	"net/http"
+	"struktur-penggalangan-dana/constants"
+	"struktur-penggalangan-dana/controllers"
+	"struktur-penggalangan-dana/middlewares"
 
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	mid "github.com/labstack/echo/v4/middleware"
+	"gorm.io/gorm"
 )
 
-func Routes() *echo.Echo {
-	e := echo.New()
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
+
+func Routes(e *echo.Echo, db *gorm.DB) {
+
 	middlewares.LogMiddleware(e)
+	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(mid.CORS())
 	e.Pre(mid.RemoveTrailingSlash())
 
@@ -32,6 +47,4 @@ func Routes() *echo.Echo {
 	e.GET("/transactions", controllers.GetUserTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/transactions", controllers.CreateTransactionController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/transactions/notification", controllers.GetNotificationController, mid.JWT([]byte(constants.SECRET_JWT)))
-
-	return e
 }

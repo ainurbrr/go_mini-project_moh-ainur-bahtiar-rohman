@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"penggalangan-dana/formatter"
-	"penggalangan-dana/helpers"
-	"penggalangan-dana/lib/database"
-	"penggalangan-dana/models"
-	"penggalangan-dana/payment"
+	"struktur-penggalangan-dana/formatter"
+	"struktur-penggalangan-dana/helpers"
+	"struktur-penggalangan-dana/repository/database"
+	"struktur-penggalangan-dana/models"
+	"struktur-penggalangan-dana/payment"
 
 	"github.com/labstack/echo/v4"
 )
@@ -52,7 +52,6 @@ func CreateTransactionController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-
 func GetNotificationController(c echo.Context) error {
 	var input payment.PaymentNotificationInput
 
@@ -60,7 +59,7 @@ func GetNotificationController(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	
+
 	err = database.ProcessPayment(c, input)
 	if err != nil {
 		return err

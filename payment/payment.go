@@ -1,9 +1,9 @@
 package payment
 
 import (
-	"penggalangan-dana/constants"
-	"penggalangan-dana/models"
 	"strconv"
+	"struktur-penggalangan-dana/constants"
+	"struktur-penggalangan-dana/models"
 
 	midtrans "github.com/veritrans/go-midtrans"
 )

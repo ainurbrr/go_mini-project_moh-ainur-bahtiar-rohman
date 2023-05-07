@@ -2,11 +2,11 @@ package database
 
 import (
 	"errors"
-	"penggalangan-dana/config"
-	"penggalangan-dana/middlewares"
-	"penggalangan-dana/models"
-	"penggalangan-dana/payment"
 	"strconv"
+	"struktur-penggalangan-dana/config"
+	"struktur-penggalangan-dana/middlewares"
+	"struktur-penggalangan-dana/models"
+	"struktur-penggalangan-dana/payment"
 
 	"github.com/labstack/echo/v4"
 )
@@ -25,7 +25,7 @@ func GetTransactionsByCampaignId(c echo.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	campaign, _ := FindById(id)
+	campaign, _ := FindCampaignById(id)
 	idFromToken, err := middlewares.ExtractTokenId(c)
 	if err != nil {
 		return nil, err
@@ -80,15 +80,15 @@ func CreateTransaction(c echo.Context) (interface{}, error) {
 	transaction.Code = ""
 
 	idFromToken, _ := middlewares.ExtractTokenId(c)
-	user, _ := GetById(idFromToken)
-	userModel := user.(models.User)
-	transaction.User = &userModel
+	user, _ := GetUserById(idFromToken)
+	userModel := user
+	transaction.User = userModel
 
 	if err := config.DB.Create(&transaction).Error; err != nil {
 		return nil, err
 	}
 
-	paymentURL, err := payment.GetPaymentURL(transaction, userModel)
+	paymentURL, err := payment.GetPaymentURL(transaction, *userModel)
 	if err != nil {
 		return transaction, err
 	}
@@ -139,7 +139,7 @@ func ProcessPayment(c echo.Context, input payment.PaymentNotificationInput) erro
 		return err
 	}
 
-	campaign, err := FindById(updatedTransaction.CampaignID)
+	campaign, err := FindCampaignById(updatedTransaction.CampaignID)
 	campaignModel := campaign.(models.Campaign)
 	if err != nil {
 		return err

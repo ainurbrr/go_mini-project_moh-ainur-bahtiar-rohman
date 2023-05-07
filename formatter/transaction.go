@@ -1,7 +1,7 @@
 package formatter
 
 import (
-	"penggalangan-dana/models"
+	"struktur-penggalangan-dana/models"
 	"time"
 )
 
