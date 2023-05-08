@@ -7,6 +7,7 @@ import (
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/formatter"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/helpers"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/payment"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/usecase"
 
 	"github.com/labstack/echo/v4"
@@ -65,18 +66,18 @@ func CreateTransactionController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// func GetNotificationController(c echo.Context) error {
-// 	var input payment.PaymentNotificationInput
+func GetNotificationController(c echo.Context) error {
+	var input payment.PaymentNotificationInput
 
-// 	err := c.Bind(&input)
-// 	if err != nil {
-// 		return err
-// 	}
+	err := c.Bind(&input)
+	if err != nil {
+		return err
+	}
 
-// 	err = database.ProcessPayment(c, input)
-// 	if err != nil {
-// 		return err
-// 	}
+	err = usecase.ProcessPayment(c, &input)
+	if err != nil {
+		return err
+	}
 
-// 	return c.JSON(http.StatusOK, input)
-// }
+	return c.JSON(http.StatusOK, input)
+}
