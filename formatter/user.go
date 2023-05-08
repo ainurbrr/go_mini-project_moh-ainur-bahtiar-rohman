@@ -1,6 +1,6 @@
 package formatter
 
-import "penggalangan-dana/models"
+import "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 type UserFormatter struct {
 	ID         int    `json:"id"`
@@ -12,7 +12,6 @@ type UserFormatter struct {
 }
 
 func FormatUser(user models.User, token string) UserFormatter {
-	
 
 	formatter := UserFormatter{
 		ID:         user.ID,

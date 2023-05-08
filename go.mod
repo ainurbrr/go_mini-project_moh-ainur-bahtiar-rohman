@@ -1,8 +1,15 @@
-module penggalangan-dana
+module github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main
 
 go 1.20
 
 require github.com/labstack/echo-jwt v0.0.0-20221127215225-c84d41a71003
+
+require (
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator v9.31.0+incompatible // indirect
+	github.com/leodido/go-urn v1.2.4 // indirect
+)
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
@@ -20,6 +27,7 @@ require (
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
+	github.com/veritrans/go-midtrans v0.0.0-20210616100512-16326c5eeb00
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect

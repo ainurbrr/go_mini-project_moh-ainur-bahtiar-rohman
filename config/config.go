@@ -2,7 +2,8 @@ package config
 
 import (
 	"fmt"
-	"penggalangan-dana/models"
+
+	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -10,9 +11,10 @@ import (
 
 var DB *gorm.DB
 
-func Init() {
+func Init() *gorm.DB {
 	InitDB()
 	InitialMigration()
+	return DB
 }
 
 type Config struct {

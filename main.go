@@ -1,14 +1,18 @@
 package main
 
 import (
-	"penggalangan-dana/config"
-	"penggalangan-dana/routes"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/routes"
+
+	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
 
-	config.Init()
-	e := routes.Routes()
+	db := config.Init()
+	e := echo.New()
+	routes.Routes(e, db)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
