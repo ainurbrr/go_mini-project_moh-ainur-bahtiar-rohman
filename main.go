@@ -24,7 +24,7 @@ func main() {
 	if port == "" {
 		port = constants.DEFAULT_PORT
 	}
-	appPort := fmt.Sprintf("%s", port)
+	appPort := fmt.Sprintf(":%s", port)
 
 	app.Logger.Fatal(app.Start(appPort))
 }
