@@ -5,7 +5,7 @@ import (
 	"struktur-penggalangan-dana/models"
 )
 
-func FindAllCampaign() (interface{}, error) {
+func FindAllCampaign() ([]models.Campaign, error) {
 	var campaigns []models.Campaign
 
 	if err := config.DB.Preload("CampaignImages", "campaign_images.is_primary = 1").Find(&campaigns).Error; err != nil {
