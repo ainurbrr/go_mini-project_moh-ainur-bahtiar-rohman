@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
@@ -28,14 +29,14 @@ type Config struct {
 func InitDB() {
 
 	config := Config{
-		DB_Username: "alta",
-		DB_Password: "",
-		DB_Port:     "3306",
-		DB_Host:     "127.0.0.1",
-		DB_Name:     "penggalangan-dana",
+		DB_Username: os.Getenv("DB_USERNAME"),
+		DB_Password: os.Getenv("DB_PASSWORD"),
+		DB_Port:     os.Getenv("DB_PORT"),
+		DB_Host:     os.Getenv("DB_HOST"),
+		DB_Name:     os.Getenv("DB_NAME"),
 	}
 
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		config.DB_Username,
 		config.DB_Password,
 		config.DB_Host,
@@ -44,7 +45,7 @@ func InitDB() {
 	)
 
 	var err error
-	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
