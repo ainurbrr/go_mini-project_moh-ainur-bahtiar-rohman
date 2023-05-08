@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"net/http"
-	"struktur-penggalangan-dana/formatter"
-	"struktur-penggalangan-dana/helpers"
-	"struktur-penggalangan-dana/middlewares"
-	"struktur-penggalangan-dana/models/payload"
-	"struktur-penggalangan-dana/usecase"
+
+	formatter "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/formatter"
+	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/helpers"
+	usecase "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/usecase"
 
 	"github.com/labstack/echo/v4"
 )

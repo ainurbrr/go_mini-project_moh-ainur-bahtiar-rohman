@@ -5,10 +5,12 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"struktur-penggalangan-dana/middlewares"
-	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/repository/database"
 
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 	"github.com/labstack/echo/v4"
 )
 

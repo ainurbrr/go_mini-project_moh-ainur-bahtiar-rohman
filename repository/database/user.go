@@ -1,8 +1,9 @@
 package database
 
 import (
-	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/models"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 )
 
 func FindUserById(id int) (*models.User, error) {

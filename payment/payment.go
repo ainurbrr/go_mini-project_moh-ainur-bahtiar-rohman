@@ -2,8 +2,10 @@ package payment
 
 import (
 	"strconv"
-	"struktur-penggalangan-dana/constants"
-	"struktur-penggalangan-dana/models"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
+
+	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 	midtrans "github.com/veritrans/go-midtrans"
 )

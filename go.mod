@@ -1,4 +1,4 @@
-module struktur-penggalangan-dana
+module github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main
 
 go 1.20
 

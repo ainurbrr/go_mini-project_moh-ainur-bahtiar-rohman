@@ -1,6 +1,6 @@
 package payload
 
-import "struktur-penggalangan-dana/models"
+import models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 type CreateTransactionRequest struct {
 	CampaignID int    `json:"campaign_id" form:"campaign_id"`

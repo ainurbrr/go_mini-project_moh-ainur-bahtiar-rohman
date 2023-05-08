@@ -3,11 +3,12 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"struktur-penggalangan-dana/formatter"
-	"struktur-penggalangan-dana/helpers"
-	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/models/payload"
-	"struktur-penggalangan-dana/usecase"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/formatter"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/helpers"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/usecase"
 
 	"github.com/labstack/echo/v4"
 )
@@ -75,7 +76,7 @@ func UpdateCampaignController(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	formatCampaignUpdated,_ := formatter.FormatCampaignDetail(campaign)
+	formatCampaignUpdated, _ := formatter.FormatCampaignDetail(campaign)
 	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaignUpdated, "Success to Update Campaign")
 
 	return c.JSON(http.StatusOK, response)

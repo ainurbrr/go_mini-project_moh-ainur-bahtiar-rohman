@@ -2,8 +2,9 @@ package formatter
 
 import (
 	"errors"
-	"struktur-penggalangan-dana/models"
 	"time"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 )
 
 type CampaignFormatter struct {

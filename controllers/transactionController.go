@@ -3,10 +3,11 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"struktur-penggalangan-dana/formatter"
-	"struktur-penggalangan-dana/helpers"
-	"struktur-penggalangan-dana/models/payload"
-	"struktur-penggalangan-dana/usecase"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/formatter"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/helpers"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/usecase"
 
 	"github.com/labstack/echo/v4"
 )

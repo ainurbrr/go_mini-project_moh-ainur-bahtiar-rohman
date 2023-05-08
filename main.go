@@ -1,8 +1,9 @@
 package main
 
 import (
-	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/routes"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/routes"
+
+	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
 
 	"github.com/labstack/echo/v4"
 )
