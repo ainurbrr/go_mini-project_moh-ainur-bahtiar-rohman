@@ -6,9 +6,9 @@ import (
 )
 
 func FindUserById(id int) (*models.User, error) {
-	var user models.User
+	user := models.User{}
 
-	if err := config.DB.Where("id = ?", user.ID).First(&user).Error; err != nil {
+	if err := config.DB.Model(&user).Where("id = ?", id).Find(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
