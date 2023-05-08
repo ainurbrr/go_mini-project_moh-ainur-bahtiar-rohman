@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"errors"
+	"strconv"
+
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/payment"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
 
@@ -72,4 +74,45 @@ func CreateTransaction(c echo.Context, req *payload.CreateTransactionRequest) (t
 	}
 
 	return transactionResult, nil
+}
+
+func ProcessPayment(c echo.Context, input *payment.PaymentNotificationInput) error {
+	transactionId, _ := strconv.Atoi(input.OrderID)
+	transaction, err := database.GetTransactionById(transactionId)
+	if err != nil {
+		return err
+	}
+	transactionModel := transaction.(models.Transaction)
+
+	if input.PaymentType == "credit_card" && input.TransactionStatus == "camptured" && input.FraudStatus == "accept" {
+		transactionModel.Status = "paid"
+	} else if input.TransactionStatus == "settlement" {
+		transactionModel.Status = "paid"
+	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
+		transactionModel.Status = "cancelled"
+	}
+
+	updatedTransaction, err := database.UpdateTransaction(transactionModel)
+	if err != nil {
+		return err
+	}
+
+	campaign, err := database.FindCampaignById(updatedTransaction.CampaignID)
+
+	if err != nil {
+		return err
+	}
+
+	if updatedTransaction.Status == "paid" {
+		campaign.BackerCount = campaign.BackerCount + 1
+		campaign.TotalAmount = campaign.TotalAmount + updatedTransaction.Amount
+
+		err := database.UpdateCampaign(&campaign)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+
 }
