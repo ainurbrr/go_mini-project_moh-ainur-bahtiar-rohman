@@ -1,17 +1,11 @@
 package database
 
 import (
-	"errors"
-	"strconv"
 	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/middlewares"
 	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/payment"
-
-	"github.com/labstack/echo/v4"
 )
 
-func FindByCampaignId(campaignId int) (interface{}, error) {
+func FindTransactionByCampaignId(campaignId int) ([]models.Transaction, error) {
 	var transactions []models.Transaction
 
 	if err := config.DB.Preload("User").Preload("Campaign").Where("campaign_id = ?", campaignId).Order("id desc").Find(&transactions).Error; err != nil {
@@ -20,31 +14,7 @@ func FindByCampaignId(campaignId int) (interface{}, error) {
 	return transactions, nil
 }
 
-func GetTransactionsByCampaignId(c echo.Context) (interface{}, error) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return nil, err
-	}
-	campaign, _ := FindCampaignById(id)
-	idFromToken, err := middlewares.ExtractTokenId(c)
-	if err != nil {
-		return nil, err
-	}
-	transactions, err := FindByCampaignId(id)
-	if err != nil {
-		return nil, err
-	}
-
-	
-
-	if campaign.UserID != idFromToken {
-		return nil, errors.New("Unauthorized")
-	}
-
-	return transactions, nil
-}
-
-func GetByUserId(userId int) (interface{}, error) {
+func FindTransactionByUserId(userId int) ([]models.Transaction, error) {
 	var transactions []models.Transaction
 	if err := config.DB.Preload("User").Preload("Campaign").Preload("Campaign.CampaignImages", "campaign_images.is_primary = 1").Where("user_id = ?", userId).Order("id desc").Find(&transactions).Error; err != nil {
 		return transactions, err
@@ -52,53 +22,10 @@ func GetByUserId(userId int) (interface{}, error) {
 	return transactions, nil
 }
 
-func GetTransactionByUserId(c echo.Context) (interface{}, error) {
-	idFromToken, _ := middlewares.ExtractTokenId(c)
-	transactions, err := GetByUserId(idFromToken)
-	if err != nil {
-		return transactions, err
-	}
-	return transactions, nil
-
-}
-
-// func SaveTransaction(transaction models.Transaction) (interface{}, error) {
-// 	if err := config.DB.Create(&transaction).Error; err != nil {
-// 		return transaction, err
-// 	}
-// 	return transaction, nil
-// }
-
-func CreateTransaction(c echo.Context) (interface{}, error) {
-	transaction := models.Transaction{}
-	c.Bind(&transaction)
-	campaign_id, _ := strconv.Atoi(c.FormValue("campaign_id"))
-	amount, _ := strconv.Atoi(c.FormValue("amount"))
-	transaction.CampaignID = campaign_id //CampaignID
-	transaction.Amount = amount
-	transaction.Status = "pending"
-	transaction.Code = ""
-
-	idFromToken, _ := middlewares.ExtractTokenId(c)
-	user, _ := FindUserById(idFromToken)
-	userModel := user
-	transaction.User = userModel
-
+func CreateTransaction(transaction models.Transaction) (models.Transaction, error) {
 	if err := config.DB.Create(&transaction).Error; err != nil {
-		return nil, err
-	}
-
-	paymentURL, err := payment.GetPaymentURL(transaction, *userModel)
-	if err != nil {
 		return transaction, err
 	}
-
-	transaction.PaymentURL = paymentURL
-	transaction, err = UpdateTransaction(transaction)
-	if err != nil {
-		return transaction, err
-	}
-
 	return transaction, nil
 }
 
@@ -111,7 +38,7 @@ func UpdateTransaction(transaction models.Transaction) (models.Transaction, erro
 
 func GetTransactionById(Id int) (interface{}, error) {
 	var transactions models.Transaction
-	if err := config.DB.Where("id=?", Id).Error; err != nil {
+	if err := config.DB.Where("id = ?", Id).Error; err != nil {
 		return transactions, err
 	}
 	return transactions, nil
@@ -140,7 +67,7 @@ func GetTransactionById(Id int) (interface{}, error) {
 // 	}
 
 // 	campaign, err := FindCampaignById(updatedTransaction.CampaignID)
-	
+
 // 	if err != nil {
 // 		return err
 // 	}
