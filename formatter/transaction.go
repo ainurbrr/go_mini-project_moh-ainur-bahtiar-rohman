@@ -1,8 +1,9 @@
 package formatter
 
 import (
-	"struktur-penggalangan-dana/models"
 	"time"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 )
 
 type CampaignTransactionFormatter struct {

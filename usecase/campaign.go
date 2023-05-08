@@ -6,12 +6,14 @@ import (
 	"io"
 	"os"
 	"strconv"
-	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/middlewares"
-	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/models/payload"
-	"struktur-penggalangan-dana/repository/database"
 	"time"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
+
+	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
 
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"

@@ -2,11 +2,12 @@ package usecase
 
 import (
 	"errors"
-	"struktur-penggalangan-dana/middlewares"
-	"struktur-penggalangan-dana/models"
-	"struktur-penggalangan-dana/models/payload"
-	"struktur-penggalangan-dana/payment"
-	"struktur-penggalangan-dana/repository/database"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/payment"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
+
+	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
 
 	"github.com/labstack/echo/v4"
 )
@@ -45,7 +46,6 @@ func CreateTransaction(c echo.Context, req *payload.CreateTransactionRequest) (t
 	idFromToken, _ := middlewares.ExtractTokenId(c)
 
 	user, _ := database.FindUserById(idFromToken)
-	
 
 	transaction = models.Transaction{
 		CampaignID: req.CampaignID, //CampaignID

@@ -1,8 +1,8 @@
 package database
 
 import (
-	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/models"
+	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 )
 
 func FindTransactionByCampaignId(campaignId int) ([]models.Transaction, error) {

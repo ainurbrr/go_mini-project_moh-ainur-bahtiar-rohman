@@ -1,10 +1,11 @@
 package routes
 
 import (
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
 	"net/http"
-	"struktur-penggalangan-dana/constants"
-	"struktur-penggalangan-dana/controllers"
-	"struktur-penggalangan-dana/middlewares"
+
+	controllers "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/controllers"
+	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"

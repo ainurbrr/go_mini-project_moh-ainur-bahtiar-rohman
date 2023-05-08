@@ -2,9 +2,9 @@ package database
 
 import (
 	"net/http"
-	"struktur-penggalangan-dana/config"
-	"struktur-penggalangan-dana/models"
 
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 	"github.com/labstack/echo/v4"
 )
 
