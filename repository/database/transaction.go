@@ -30,15 +30,15 @@ func CreateTransaction(transaction models.Transaction) (models.Transaction, erro
 }
 
 func UpdateTransaction(transaction models.Transaction) (models.Transaction, error) {
-	if err := config.DB.Save(&transaction).Error; err != nil {
+	if err := config.DB.Model(&transaction).Where("id = ?", transaction.ID).Updates(transaction).Error; err != nil {
 		return transaction, err
 	}
 	return transaction, nil
 }
 
-func GetTransactionById(Id int) (interface{}, error) {
+func GetTransactionById(Id int) (models.Transaction, error) {
 	var transactions models.Transaction
-	if err := config.DB.Where("id = ?", Id).Error; err != nil {
+	if err := config.DB.Where("id = ?", Id).Find(&transactions).Error; err != nil {
 		return transactions, err
 	}
 	return transactions, nil
