@@ -5,9 +5,9 @@ import (
 
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
 
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
-	midtrans "github.com/veritrans/go-midtrans"
+	"github.com/veritrans/go-midtrans"
 )
 
 func GetPaymentURL(transaction models.Transaction, user models.User) (string, error) {
