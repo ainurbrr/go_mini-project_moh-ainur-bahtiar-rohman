@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -27,7 +27,6 @@ type Config struct {
 }
 
 func InitDB() {
-
 	config := Config{
 		DB_Username: os.Getenv("DB_USERNAME"),
 		DB_Password: os.Getenv("DB_PASSWORD"),

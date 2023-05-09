@@ -10,9 +10,9 @@ import (
 
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
 
-	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
-	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
 
 	"github.com/gosimple/slug"
@@ -107,7 +107,7 @@ func UpdateCampaign(c echo.Context) (campaign models.Campaign, err error) {
 }
 
 func UploadCampaignImage(c echo.Context) (campaignImages models.Campaign_image, err error) {
-	id := c.FormValue("campaign_id")
+	id := c.Param("id")
 	campaign_id, _ := strconv.Atoi(id)
 	campaign, err := database.FindCampaignById(campaign_id)
 	if err != nil {

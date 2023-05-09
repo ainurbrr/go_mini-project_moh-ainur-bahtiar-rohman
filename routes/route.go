@@ -1,11 +1,12 @@
 package routes
 
 import (
-	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
 	"net/http"
 
-	controllers "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/controllers"
-	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
+
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/controllers"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -42,10 +43,11 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/campaigns/:id", controllers.GetCampaignDetailController)
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
-	e.POST("/campaign-images", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
-
+	e.POST("/campaign-images/:id", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.GET("/campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
-	e.GET("/transactions", controllers.GetUserTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
-	e.POST("/transactions", controllers.CreateTransactionController, mid.JWT([]byte(constants.SECRET_JWT)))
-	e.POST("/transactions/notification", controllers.GetNotificationController, mid.JWT([]byte(constants.SECRET_JWT)))
+
+	transactions := e.Group("/transactions", mid.JWT([]byte(constants.SECRET_JWT)))
+	transactions.GET("", controllers.GetUserTransactionsController)
+	transactions.POST("", controllers.CreateTransactionController)
+	transactions.POST("/:id", controllers.ProcessPaymentController)
 }
