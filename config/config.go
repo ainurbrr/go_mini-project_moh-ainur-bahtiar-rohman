@@ -26,14 +26,21 @@ type Config struct {
 }
 
 func InitDB() {
-
 	config := Config{
-		DB_Username: "u1606266_database",
-		DB_Password: "bMZRKgzTX5EwUcm",
+		DB_Username: "root",
+		DB_Password: "",
 		DB_Port:     "3306",
-		DB_Host:     "45.130.230.51",
-		DB_Name:     "u1606266_crowdfunding",
+		DB_Host:     "127.0.0.1",
+		DB_Name:     "penggalangan-dana",
 	}
+
+	// config := Config{
+	// 	DB_Username: "u1606266_database",
+	// 	DB_Password: "bMZRKgzTX5EwUcm",
+	// 	DB_Port:     "3306",
+	// 	DB_Host:     "45.130.230.51",
+	// 	DB_Name:     "u1606266_crowdfunding",
+	// }
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		config.DB_Username,
