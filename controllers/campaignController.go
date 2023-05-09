@@ -82,6 +82,18 @@ func UpdateCampaignController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+func DeleteCampaignController(c echo.Context) error {
+	campaign, err := usecase.DeleteCampaign(c)
+	if err != nil {
+		return err
+	}
+	formatCampaignUpdated, _ := formatter.FormatCampaignDetail(campaign)
+	response := helpers.APIResponse(http.StatusOK, "succes", formatCampaignUpdated, "Delete Campaign")
+
+	return c.JSON(http.StatusOK, response)
+}
+
+
 func UploadCampaignImageController(c echo.Context) error {
 	campaignImage, err := usecase.UploadCampaignImage(c)
 	if err != nil {
