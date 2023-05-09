@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
