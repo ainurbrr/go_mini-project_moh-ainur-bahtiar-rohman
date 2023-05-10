@@ -76,19 +76,21 @@ func CreateTransaction(c echo.Context, req *payload.CreateTransactionRequest) (t
 	return transactionResult, nil
 }
 
-func ProcessPayment(c echo.Context) (*models.Campaign, error) {
-	transactionId, _ := strconv.Atoi(c.Param("id"))
+func ProcessPayment(c echo.Context, input *payment.PaymentNotificationInput) (*models.Campaign, error) {
+	transactionId, _ := strconv.Atoi(input.OrderID)
 	transaction, err := database.GetTransactionById(transactionId)
 	if err != nil {
 		return nil, err
 	}
-	c.Bind(&transaction)
+	
 
-	if transaction.Status == "paid" {
-		return nil, errors.New("transaksi sudah dibayar")
+	if input.PaymentType == "credit_card" && input.TransactionStatus == "captured" && input.FraudStatus == "accept" {
+		transaction.Status = "paid"
+	} else if input.TransactionStatus == "settlement" {
+		transaction.Status = "paid"
+	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
+		transaction.Status = "cancelled"
 	}
-
-	transaction.Status = "paid"
 
 	updatedTransaction, err := database.UpdateTransaction(transaction)
 	if err != nil {
@@ -110,5 +112,43 @@ func ProcessPayment(c echo.Context) (*models.Campaign, error) {
 			return nil, err
 		}
 	}
+
 	return &campaign, nil
 }
+
+// func ProcessPayment(c echo.Context) (*models.Campaign, error) {
+// 	transactionId, _ := strconv.Atoi(c.Param("id"))
+// 	transaction, err := database.GetTransactionById(transactionId)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	c.Bind(&transaction)
+
+// 	if transaction.Status == "paid" {
+// 		return nil, errors.New("transaksi sudah dibayar")
+// 	}
+
+// 	transaction.Status = "paid"
+
+// 	updatedTransaction, err := database.UpdateTransaction(transaction)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	campaign, err := database.FindCampaignById(updatedTransaction.CampaignID)
+
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	if updatedTransaction.Status == "paid" {
+// 		campaign.BackerCount = campaign.BackerCount + 1
+// 		campaign.TotalAmount = campaign.TotalAmount + updatedTransaction.Amount
+
+// 		err := database.UpdateCampaign(&campaign)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 	}
+// 	return &campaign, nil
+// }
