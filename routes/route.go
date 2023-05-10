@@ -43,6 +43,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/campaigns/:id", controllers.GetCampaignDetailController)
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
+	e.DELETE("/campaigns/:id", controllers.DeleteCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/campaign-images/:id", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.GET("/campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 
