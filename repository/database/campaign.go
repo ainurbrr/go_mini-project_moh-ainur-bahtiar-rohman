@@ -64,7 +64,7 @@ func DeleteCampaign(campaign *models.Campaign) (err error) {
 	return nil
 }
 
-func UploadCampaignImage(campaignImage models.Campaign_image) (err error) {
+func UploadCampaignImage(campaignImage *models.Campaign_image) (err error) {
 	if err = config.DB.Create(&campaignImage).Error; err != nil {
 		return
 	}
